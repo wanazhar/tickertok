@@ -16,7 +16,7 @@ TickerTok is a sleek web application that processes CSV files containing stock t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/tickertok.git
+   git clone https://github.com/wanazhar/tickertok.git
    cd tickertok
    ```
 
