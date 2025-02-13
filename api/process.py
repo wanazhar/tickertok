@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Request
+from fastapi import FastAPI, UploadFile, File, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import pandas as pd
@@ -6,6 +6,7 @@ import yfinance as yf
 import io
 
 app = FastAPI()
+router = APIRouter(prefix="/api")
 
 # Configure CORS
 app.add_middleware(
@@ -27,19 +28,21 @@ async def log_requests(request: Request, call_next):
 async def root():
     return {"message": "API is running"}
 
-@app.get("/api/health")
+@router.get("/health")
 async def health_check():
     return {"status": "ok"}
 
-@app.post("/api/process")
+@router.post("/process")
 async def process_file(file: UploadFile = File(...)):
     try:
-        # Read the file content into memory first
         contents = await file.read()
         df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
         
         if "Ticker" not in df.columns:
-            return {"error": "CSV must contain a 'Ticker' column"}
+            return JSONResponse(
+                status_code=400,
+                content={"error": "CSV must contain a 'Ticker' column"}
+            )
 
         result = []
 
@@ -56,6 +59,14 @@ async def process_file(file: UploadFile = File(...)):
         output_csv = io.StringIO()
         output_df.to_csv(output_csv, index=False)
         
-        return output_csv.getvalue()
+        return JSONResponse(
+            content=output_csv.getvalue(),
+            media_type="text/csv"
+        )
     except Exception as e:
-        return {"error": str(e)} 
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
+
+app.include_router(router) 

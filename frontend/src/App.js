@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import "./styles.css";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://tickertok-beryl.vercel.app' 
-  : '';
+const API_BASE_URL = '';
 
 const App = () => {
   const [file, setFile] = useState(null);
@@ -35,13 +33,18 @@ const App = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch(`${API_BASE_URL}/api/process`, {
+      console.log('Sending request to:', '/api/process');
+
+      const response = await fetch('/api/process', {
         method: "POST",
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       const blob = await response.blob();
