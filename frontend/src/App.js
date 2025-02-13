@@ -36,16 +36,16 @@ const App = () => {
         body: formData,
       });
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        setDownloadUrl(url);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || "Error processing file");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setDownloadUrl(url);
     } catch (err) {
-      setError("Network error occurred. Please try again.");
+      console.error("Upload error:", err);
+      setError("Failed to process file. Please try again.");
     } finally {
       setIsLoading(false);
     }

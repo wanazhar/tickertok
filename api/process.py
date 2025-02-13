@@ -1,12 +1,12 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import yfinance as yf
 import io
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Add CORS middleware
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,26 +15,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok"}
+
 @app.post("/api/process")
 async def process_file(file: UploadFile = File(...)):
-    df = pd.read_csv(file.file)
-    
-    if "Ticker" not in df.columns:
-        return {"error": "CSV must contain a 'Ticker' column"}
+    try:
+        df = pd.read_csv(file.file)
+        
+        if "Ticker" not in df.columns:
+            return {"error": "CSV must contain a 'Ticker' column"}
 
-    result = []
+        result = []
 
-    for ticker in df["Ticker"]:
-        try:
-            stock = yf.Ticker(ticker)
-            history = stock.history(period="1mo")  # Fetch last month's prices
-            latest_price = history["Close"].iloc[-1] if not history.empty else "N/A"
-            result.append({"Ticker": ticker, "Latest Price": latest_price})
-        except Exception as e:
-            result.append({"Ticker": ticker, "Latest Price": "Error"})
+        for ticker in df["Ticker"]:
+            try:
+                stock = yf.Ticker(ticker)
+                history = stock.history(period="1mo")
+                latest_price = history["Close"].iloc[-1] if not history.empty else "N/A"
+                result.append({"Ticker": ticker, "Latest Price": latest_price})
+            except Exception as e:
+                result.append({"Ticker": ticker, "Latest Price": "Error"})
 
-    output_df = pd.DataFrame(result)
-    output_csv = io.StringIO()
-    output_df.to_csv(output_csv, index=False)
-
-    return output_csv.getvalue() 
+        output_df = pd.DataFrame(result)
+        output_csv = io.StringIO()
+        output_df.to_csv(output_csv, index=False)
+        
+        return output_csv.getvalue()
+    except Exception as e:
+        return {"error": str(e)} 
