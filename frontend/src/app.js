@@ -14,7 +14,7 @@ const App = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch("https://tickertok.vercel.app/process", {
+    const response = await fetch("/api/process", {
       method: "POST",
       body: formData,
     });
