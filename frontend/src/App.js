@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import "./styles.css";
 
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://tickertok-beryl.vercel.app' 
+  : '';
+
 const App = () => {
   const [file, setFile] = useState(null);
   const [downloadUrl, setDownloadUrl] = useState("");
@@ -31,7 +35,7 @@ const App = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("/api/process", {
+      const response = await fetch(`${API_BASE_URL}/api/process`, {
         method: "POST",
         body: formData,
       });
