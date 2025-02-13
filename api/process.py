@@ -22,7 +22,9 @@ async def health_check():
 @app.post("/api/process")
 async def process_file(file: UploadFile = File(...)):
     try:
-        df = pd.read_csv(file.file)
+        # Read the file content into memory first
+        contents = await file.read()
+        df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
         
         if "Ticker" not in df.columns:
             return {"error": "CSV must contain a 'Ticker' column"}
