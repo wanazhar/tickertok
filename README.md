@@ -97,4 +97,4 @@ If you have any questions or need help, please open an issue in the repository.
 
 ---
 
-<p align="center">Made with ❤️ by <a href="https://github.com/yourusername">wanazhar</a></p>
+<p align="center">Made with ❤️ by <a href="https://github.com/wanazhar">wanazhar</a></p>
