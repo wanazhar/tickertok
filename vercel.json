@@ -5,8 +5,9 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build",
-        "cleanDistDir": true
+        "distDir": "public",
+        "cleanDistDir": true,
+        "installCommand": "npm ci --omit=dev"
       }
     },
     {
