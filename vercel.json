@@ -2,15 +2,16 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/process.py",
-      "use": "@vercel/python"
-    },
-    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/build"
+        "distDir": "build",
+        "cleanDistDir": true
       }
+    },
+    {
+      "src": "api/process.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
@@ -20,7 +21,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "frontend/$1"
     }
   ]
 }

@@ -1,0 +1,28 @@
+# Core
+fastapi==0.110.0
+uvicorn==0.29.0
+python-multipart==0.0.6
+
+# Financial Core
+yfinance==0.2.37
+pandas==2.2.1
+numpy==1.26.4
+pandas-ta==0.3.14b0
+pyportfolioopt==1.5.5
+quantstats==0.0.62
+riskfolio-lib==0.1.8
+
+# Advanced Analytics
+tensorflow==2.15.0
+prophet==1.1.5
+statsmodels==0.14.1
+
+# News & Sentiment
+newspaper3k==0.2.8
+nltk==3.8.1
+vaderSentiment==3.3.2
+
+# Visualization
+plotly==5.18.0
+matplotlib==3.8.3
+seaborn==0.13.2

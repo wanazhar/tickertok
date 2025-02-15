@@ -1,16 +1,16 @@
-# 📈 TickerTok
+# 🚀 TickerTok - Modern Financial Analytics Platform
 
-> Rewinding stock prices, one tick at a time.
+![Dashboard Preview](https://i.imgur.com/7WXqK0a.png)
 
-TickerTok is a sleek web application that processes CSV files containing stock tickers and returns their latest prices using Yahoo Finance data.
+## 🌟 Features
 
-## ✨ Features
-
-- 📤 Simple CSV file upload
-- 📊 Real-time stock price fetching
-- 📥 Instant CSV download with results
-- 🎯 Error handling and validation
-- 💫 Modern, responsive UI
+| Category        | Features                          | Tech Stack          |
+|-----------------|-----------------------------------|---------------------|
+| 📈 Market Data  | Real-time Quotes • Historical Data| yFinance • Pandas   |
+| 🔍 Technicals   | 50+ Indicators • Custom Strategies| pandas-ta • TA-Lib  |
+| 🎯 Portfolio    | MPT Optimization • Risk Analysis  | PyPortfolioOpt      |
+| 📰 Sentiment    | News Analysis • Social Metrics    | NLTK • Vader        |
+| 📊 Visualization| Interactive Charts • PDF Reports  | Plotly • ReportLab  |
 
 ## 🚀 Quick Start
 
@@ -80,6 +80,20 @@ This project is configured for easy deployment on Vercel:
 2. Create a new project on [Vercel](https://vercel.com)
 3. Connect your forked repository
 4. Deploy!
+
+## Vercel Deployment Checklist
+
+- [ ] Enable automatic builds in Vercel project settings
+- [ ] Set environment variables:
+  - `NODE_ENV=production`
+  - `PYTHON_VERSION=3.11`
+- [ ] Configure build command: `npm run vercel-build`
+- [ ] Set output directory: `public`
+
+## One-click deployment
+```bash
+vercel deploy --prod
+```
 
 ## 📝 License
 

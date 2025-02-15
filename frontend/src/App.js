@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { TradingViewWidget } from './components/TradingView'
+import PortfolioAllocationPie from './components/PortfolioPie'
+import RiskHeatmap from './components/RiskHeatmap'
+import TechnicalIndicatorCard from './components/TechnicalIndicatorCard'
+import MarketSentimentGauge from './components/MarketSentimentGauge'
+import EarningsCalendar from './components/EarningsCalendar'
+import NewsFeedWidget from './components/NewsFeedWidget'
 
 const API_BASE_URL = '';
 
@@ -59,50 +66,74 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      <h1>TickerTok</h1>
-      <p className="subtitle">Rewinding stock prices, one tick at a time.</p>
+    <div className="dark:bg-gray-900 min-h-screen">
+      <header className="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+        <h1 className="text-3xl font-bold text-white">📈 TickerTok Analytics</h1>
+      </header>
 
-      <div className="upload-section">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="file-input"
-        />
-        <button
-          onClick={handleUpload}
-          disabled={!file || isLoading}
-          className="button"
-        >
-          {isLoading ? (
-            <>
-              Processing
-              <span className="loading"></span>
-            </>
-          ) : (
-            "Upload & Process"
-          )}
-        </button>
-
-        {error && <p className="error">{error}</p>}
-
-        {downloadUrl && (
-          <div>
-            <a
-              href={downloadUrl}
-              download="processed_prices.csv"
-              className="download-link"
-            >
-              Download Processed CSV
-            </a>
-          </div>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl">
+          <TradingViewWidget />
+        </div>
+        
+        <div className="space-y-6">
+          <PortfolioAllocationPie />
+          <RiskHeatmap />
+        </div>
       </div>
 
-      <footer>
-        vibecoded by wanazhar • powered by gpt4-o • 2025
-      </footer>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
+        <TechnicalIndicatorCard />
+        <MarketSentimentGauge />
+        <EarningsCalendar />
+        <NewsFeedWidget />
+      </div>
+
+      <div className="container">
+        <h1>TickerTok</h1>
+        <p className="subtitle">Rewinding stock prices, one tick at a time.</p>
+
+        <div className="upload-section">
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileChange}
+            className="file-input"
+          />
+          <button
+            onClick={handleUpload}
+            disabled={!file || isLoading}
+            className="button"
+          >
+            {isLoading ? (
+              <>
+                Processing
+                <span className="loading"></span>
+              </>
+            ) : (
+              "Upload & Process"
+            )}
+          </button>
+
+          {error && <p className="error">{error}</p>}
+
+          {downloadUrl && (
+            <div>
+              <a
+                href={downloadUrl}
+                download="processed_prices.csv"
+                className="download-link"
+              >
+                Download Processed CSV
+              </a>
+            </div>
+          )}
+        </div>
+
+        <footer>
+          vibecoded by wanazhar • powered by gpt4-o • 2025
+        </footer>
+      </div>
     </div>
   );
 };

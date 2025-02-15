@@ -1,9 +1,16 @@
 from fastapi import FastAPI, UploadFile, File, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import pandas as pd
+import numpy as np
 import yfinance as yf
 import io
+import json
+from datetime import datetime
+import pandas_ta as ta
+from pypfopt import EfficientFrontier
+from reportlab.pdfgen import canvas
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 app = FastAPI()
 router = APIRouter(prefix="/api")
@@ -41,7 +48,8 @@ async def process_file(file: UploadFile = File(...)):
         if "Ticker" not in df.columns:
             return JSONResponse(
                 status_code=400,
-                content={"error": "CSV must contain a 'Ticker' column"}
+                content={"error": "CSV must contain a 'Ticker' column"},
+                headers={"Access-Control-Allow-Origin": "*"}
             )
 
         result = []
@@ -61,12 +69,37 @@ async def process_file(file: UploadFile = File(...)):
         
         return JSONResponse(
             content=output_csv.getvalue(),
-            media_type="text/csv"
+            media_type="text/csv",
+            headers={"Access-Control-Allow-Origin": "*"}
         )
     except Exception as e:
         return JSONResponse(
             status_code=500,
-            content={"error": str(e)}
+            content={"error": str(e)},
+            headers={"Access-Control-Allow-Origin": "*"}
         )
 
-app.include_router(router) 
+@router.post('/technical-analysis')
+async def technical_analysis(file: UploadFile = File(...)):
+    df = pd.read_csv(file.file)
+    df.ta.strategy('All')
+    return JSONResponse(content=df.to_json(), headers={'Access-Control-Allow-Origin': '*'})
+
+@router.post('/optimize-portfolio')
+async def optimize_portfolio(file: UploadFile = File(...)):
+    df = pd.read_csv(file.file)
+    returns = df.pct_change().dropna()
+    ef = EfficientFrontier(returns.mean(), returns.cov())
+    weights = ef.max_sharpe()
+    return JSONResponse(content=json.dumps(weights), headers={"Access-Control-Allow-Origin": "*"})
+
+
+@router.post('/market-sentiment')
+async def market_sentiment():
+    news = yf.Ticker('^GSPC').news
+    analyzer = SentimentIntensityAnalyzer()
+    sentiments = [analyzer.polarity_scores(n['title']) for n in news]
+    return JSONResponse(content=json.dumps(sentiments), headers={"Access-Control-Allow-Origin": "*"})
+
+
+app.include_router(router)
