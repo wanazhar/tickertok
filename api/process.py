@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Request, APIRouter
+from fastapi import FastAPI, UploadFile, File, Request, APIRouter, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 import pandas as pd
@@ -11,6 +11,10 @@ import pandas_ta as ta
 from pypfopt import EfficientFrontier
 from reportlab.pdfgen import canvas
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from quantlib import AmericanOption, Date, PlainVanillaPayoff, AmericanExercise, NPV
+import tensorflow as tf
+import ccxt
+import web3
 
 app = FastAPI()
 router = APIRouter(prefix="/api")
@@ -101,5 +105,40 @@ async def market_sentiment():
     sentiments = [analyzer.polarity_scores(n['title']) for n in news]
     return JSONResponse(content=json.dumps(sentiments), headers={"Access-Control-Allow-Origin": "*"})
 
+
+class AdvancedPricingModel(tf.keras.Model):
+    def __init__(self):
+        super().__init__()
+        self.lstm = tf.keras.layers.LSTM(512)
+        self.dense = tf.keras.layers.Dense(5, activation='softmax')
+
+    def call(self, inputs):
+        x = self.lstm(inputs)
+        return self.dense(x)
+
+@router.websocket("/ws/pricing")
+async def websocket_pricing(websocket: WebSocket):
+    await websocket.accept()
+    model = AdvancedPricingModel()
+    while True:
+        data = await websocket.receive_json()
+        prediction = model.predict(data["ohlcv"])
+        await websocket.send_json({
+            "fair_value": complex_black_scholes(data),
+            "lstm_prediction": prediction.tolist(),
+            "greeks": calculate_greeks(data)
+        })
+
+def complex_black_scholes(params):
+    calculation_date = Date(params["day"], params["month"], params["year"])
+    option = AmericanOption(
+        payoff=PlainVanillaPayoff(params["type"], params["strike"]),
+        exercise=AmericanExercise(calculation_date, Date(params["exp_day"], params["exp_month"], params["exp_year"]))
+    )
+    return NPV(option)
+
+def calculate_greeks(data):
+    # TO DO: implement greeks calculation
+    pass
 
 app.include_router(router)

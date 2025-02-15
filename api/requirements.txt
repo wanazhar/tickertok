@@ -26,3 +26,28 @@ vaderSentiment==3.3.2
 plotly==5.18.0
 matplotlib==3.8.3
 seaborn==0.13.2
+
+# Quantitative Finance
+pyblackscholes==0.7.1
+quantlib-python==1.31
+zipline-reloaded==3.0.0
+pyfolio==0.9.2
+pytorch-forecasting==1.0.0
+
+# Alternative Data
+twitter-scraper==2.5.1
+sec-edgar-downloader==4.0.5
+cryptocompare==0.9.1
+
+# Execution Infrastructure
+ccxt==4.2.85
+alpaca-trade-api==3.3.0
+ibapi==10.24.2
+
+# Blockchain Integration
+web3==6.11.1
+coinmetrics-api-client==2024.1
+
+# Advanced Visualization
+dash==2.14.2
+streamlit==1.32.0

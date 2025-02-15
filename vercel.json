@@ -5,12 +5,19 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "public"
+        "distDir": "public",
+        "installCommand": "npm run install:prod",
+        "buildCommand": "npm run build",
+        "maxLambdaSize": 50
       }
     },
     {
-      "src": "api/process.py",
-      "use": "@vercel/python"
+      "src": "api/**/*.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": 50,
+        "includeFiles": "requirements.txt"
+      }
     }
   ],
   "routes": [

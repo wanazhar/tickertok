@@ -9,10 +9,14 @@
     "axios": "^1.6.7"
   },
   "scripts": {
+    "preinstall": "rm -rf node_modules package-lock.json .cache",
     "postinstall": "npm install --omit=dev",
+    "install:prod": "npm install --omit=dev --legacy-peer-deps --force",
     "vercel-build": "npm run build && mv build public && echo 'Vercel build complete'",
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "build": "react-scripts build && npm run build:extras",
+    "build:extras": "curl -o src/quants.tar.gz https://quantlib.org/download/qwant-2.0.tar.gz && tar -xzf src/quants.tar.gz",
+    "postbuild": "node scripts/inject-analytics.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
