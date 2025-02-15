@@ -6,11 +6,10 @@
 
 | Category        | Features                          | Tech Stack          |
 |-----------------|-----------------------------------|---------------------|
-| 📈 Market Data  | Real-time Quotes • Historical Data| yFinance • Pandas   |
-| 🔍 Technicals   | 50+ Indicators • Custom Strategies| pandas-ta • TA-Lib  |
-| 🎯 Portfolio    | MPT Optimization • Risk Analysis  | PyPortfolioOpt      |
-| 📰 Sentiment    | News Analysis • Social Metrics    | NLTK • Vader        |
-| 📊 Visualization| Interactive Charts • PDF Reports  | Plotly • ReportLab  |
+| Market Data      | Real-time Stocks, Crypto, FX      | Alpaca, Binance, OANDA |
+| Analytics       | Technical Indicators, Sentiment  | pandas-ta, Vader     |
+| Visualization   | TradingView Charts, Order Book    | React, Plotly        |
+| Deployment      | Serverless API, Static Frontend   | Vercel, FastAPI      |
 
 ## 🚀 Quick Start
 
