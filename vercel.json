@@ -2,12 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/package.json",
+      "src": "frontend/*",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "public",
-        "cleanDistDir": true,
-        "installCommand": "npm ci --omit=dev"
+        "distDir": "public"
       }
     },
     {
