@@ -1,7 +1,5 @@
 # 🚀 TickerTok - Modern Financial Analytics Platform
 
-![Dashboard Preview](https://i.imgur.com/7WXqK0a.png)
-
 ## 🌟 Features
 
 | Category        | Features                          | Tech Stack          |
